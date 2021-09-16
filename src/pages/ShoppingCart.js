@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import CartItem from '../components/CartItem'
 import OrderSummary from '../components/OrderSummary'
 
-export default function ShoppingCart({ items, cartItems }) {
+export default function ShoppingCart({ items, cartItems, setCartItems }) {
   const [checkedItems, setCheckedItems] = useState(cartItems.map((el) => el.itemId))
 
   const handleCheckChange = (checked, id) => {
@@ -24,10 +24,20 @@ export default function ShoppingCart({ items, cartItems }) {
   };
 
   const handleQuantityChange = (quantity, itemId) => {
+    let tempArr = [...cartItems];
+    // let tempArr = cartItems.slice();
+    tempArr.map(el => {
+      if(el.itemId === itemId){
+        el.quantity = quantity;
+      }
+    });
+    setCartItems(tempArr);
+
   }
 
   const handleDelete = (itemId) => {
-    setCheckedItems(checkedItems.filter((el) => el !== itemId))
+    setCheckedItems(checkedItems.filter((el) => el !== itemId));
+    setCartItems(cartItems.filter((el) => el["itemId"] !== itemId));
   }
 
   const getTotal = () => {
@@ -73,7 +83,7 @@ export default function ShoppingCart({ items, cartItems }) {
           ) : (
               <div id="cart-item-list">
                 {renderItems.map((item, idx) => {
-                  const quantity = cartItems.filter(el => el.itemId === item.id)[0].quantity
+                  const quantity = cartItems.filter(el => el.itemId === item.id)[0].quantity;
                   return <CartItem
                     key={idx}
                     handleCheckChange={handleCheckChange}
